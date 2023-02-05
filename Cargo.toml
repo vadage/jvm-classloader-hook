@@ -1,0 +1,22 @@
+[package]
+name = "jvm-hook"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "classloader"
+crate-type = ["cdylib"]
+
+[dependencies]
+jni = "0.20.0"
+detour = { git = "https://github.com/Hpmason/detour-rs", branch = "fix-nightly1.67.0-changes" }
+winapi = { version = "0.3.9", features = ["libloaderapi"] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = 2
+strip = true
