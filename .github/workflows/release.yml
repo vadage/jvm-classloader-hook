@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+
+      - name: Enable nightly
+        run: rustup override set nightly
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2.2.0
+
+      - name: Build library
+        run: cargo build --release
+
+      - name: Upload asset
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "target/release/*.dll"
+          update_latest_release: true

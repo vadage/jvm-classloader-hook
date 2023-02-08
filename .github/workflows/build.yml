@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  push:
+    branches: [ '**' ]
+    paths:
+      - 'src/**'
+      - 'Cargo.toml'
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+
+      - name: Enable nightly
+        run: rustup override set nightly
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2.2.0
+
+      - name: Build library
+        run: cargo build --release
