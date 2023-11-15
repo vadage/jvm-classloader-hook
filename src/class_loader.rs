@@ -2,7 +2,7 @@ use std::ffi::CString;
 use std::mem;
 use std::slice::from_raw_parts_mut;
 
-use detour::static_detour;
+use retour::static_detour;
 use jni::sys::{jbyte, jclass, JNIEnv, jobject, jsize};
 use winapi::ctypes::c_char;
 use winapi::um::libloaderapi::{GetModuleHandleA, GetProcAddress};
