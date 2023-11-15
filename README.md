@@ -16,8 +16,11 @@ Keep this in mind as you use this feature in your projects.
 All Java versions should be supported, as `jni` is only used for the structs and no method calls or such.<br>
 Thus far only `Java 8`, `Java 20` and `Java 21` were explicitly tested.
 
-### ⚠️ Operating system
-The build targets only windows, as the library heavily relies on functionality of `winapi`.
+### ✅ Operating system
+The build targets all major architectures
+- Linux
+- Windows
+- MacOS
 
 # How to build
 1. [Install rust](https://www.rust-lang.org/tools/install)
