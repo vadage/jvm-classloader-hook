@@ -6,7 +6,11 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -24,12 +28,14 @@ jobs:
         uses: Swatinem/rust-cache@v2.2.0
 
       - name: Build library
-        run: cargo build --release
+        run: |
+          cargo build --release
+          cp target/release/*.{dll,so,dylib} ${{ github.workspace }}/artifacts/
 
       - name: Upload asset
         uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file: "target/release/*.dll"
+          file: ${{ github.workspace }}/artifacts/*
           update_latest_release: true
