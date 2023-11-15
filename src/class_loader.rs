@@ -1,4 +1,4 @@
-use std::mem;
+use std::ops::Deref;
 use std::os::raw::c_char;
 use std::slice::from_raw_parts_mut;
 
@@ -26,9 +26,8 @@ impl ClassLoader {
     pub unsafe fn setup_hook() {
         let handle = Library::new("jvm").expect("Could not find jvm library.");
         let method = handle.get::<DefineClassCommon>(b"JVM_DefineClassWithSource").expect("Could not find exported function.");
-        let target: DefineClassCommon = mem::transmute(method);
 
-        let hook = DefineClassCommonHook.initialize(target, ClassLoader::hooked_define_class_common).expect("Could not initialize hook for class loading.");
+        let hook = DefineClassCommonHook.initialize(*method.deref(), ClassLoader::hooked_define_class_common).expect("Could not initialize hook for class loading.");
         hook.enable().expect("Could not to hook into class loading.");
     }
 
