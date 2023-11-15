@@ -8,9 +8,13 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        target: [
+          { os: windows-latest, extension: dll },
+          { os: ubuntu-latest,  extension: so },
+          { os: macos-latest, extension: dylib }
+        ]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.target.os }}
 
     steps:
       - name: Checkout code
@@ -28,14 +32,12 @@ jobs:
         uses: Swatinem/rust-cache@v2.2.0
 
       - name: Build library
-        run: |
-          cargo build --release
-          cp target/release/*.{dll,so,dylib} ${{ github.workspace }}/artifacts/
+        run: cargo build --release
 
       - name: Upload asset
         uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file: ${{ github.workspace }}/artifacts/*
+          file: target/release/*.${{ matrix.target.extension }}
           update_latest_release: true
