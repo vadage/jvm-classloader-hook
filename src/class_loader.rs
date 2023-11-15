@@ -1,11 +1,10 @@
-use std::ffi::CString;
 use std::mem;
+use std::os::raw::c_char;
 use std::slice::from_raw_parts_mut;
 
 use retour::static_detour;
 use jni::sys::{jbyte, jclass, JNIEnv, jobject, jsize};
-use winapi::ctypes::c_char;
-use winapi::um::libloaderapi::{GetModuleHandleA, GetProcAddress};
+use libloading::Library;
 
 use crate::jvm::DefineClassCommon;
 
@@ -25,17 +24,12 @@ impl ClassLoader {
     const JAVA_MAGIC_VALUE: [jbyte; 4] = convert_magic_number(0xCAFEBABE);
 
     pub unsafe fn setup_hook() {
-        let module = CString::new("jvm.dll").unwrap();
-        let handle = GetModuleHandleA(module.as_ptr());
-
-        let method_name = CString::new("JVM_DefineClassWithSource").unwrap();
-        let method = GetProcAddress(handle, method_name.as_ptr());
+        let handle = Library::new("jvm").expect("Could not find jvm library.");
+        let method = handle.get::<DefineClassCommon>(b"JVM_DefineClassWithSource").expect("Could not find exported function.");
         let target: DefineClassCommon = mem::transmute(method);
 
-        DefineClassCommonHook.initialize(target, ClassLoader::hooked_define_class_common)
-            .unwrap()
-            .enable()
-            .expect("Unable to hook into class loading.");
+        let hook = DefineClassCommonHook.initialize(target, ClassLoader::hooked_define_class_common).expect("Could not initialize hook for class loading.");
+        hook.enable().expect("Could not to hook into class loading.");
     }
 
     fn hooked_define_class_common(env: JNIEnv, name: *const c_char, loader: jobject, buf: *const jbyte, len: jsize, pd: jobject, source: *const c_char) -> jclass {

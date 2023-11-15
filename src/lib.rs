@@ -1,16 +1,13 @@
-use winapi::um::winnt::DLL_PROCESS_ATTACH;
-
 mod class_loader;
 mod jvm;
 
+use std::os::raw::c_void;
+use jni::JavaVM;
+use jni::sys::{jint, JNI_VERSION_1_1};
 use class_loader::ClassLoader;
 
 #[no_mangle]
-pub unsafe extern "stdcall" fn DllMain(_instance: u32, reason: u32, _reserved: *mut u8) -> bool {
-
-    if reason == DLL_PROCESS_ATTACH {
-        ClassLoader::setup_hook();
-    }
-
-    return true;
+pub unsafe extern "system" fn JNI_OnLoad(_: JavaVM, _: *mut c_void) -> jint {
+    ClassLoader::setup_hook();
+    return JNI_VERSION_1_1;
 }

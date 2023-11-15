@@ -6,7 +6,15 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        target: [
+          { os: windows-latest, extension: dll },
+          { os: ubuntu-latest,  extension: so },
+          { os: macos-latest, extension: dylib }
+        ]
+
+    runs-on: ${{ matrix.target.os }}
 
     steps:
       - name: Checkout code
@@ -31,5 +39,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file: "target/release/*.dll"
+          file: target/release/*.${{ matrix.target.extension }}
           update_latest_release: true
