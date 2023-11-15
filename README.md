@@ -13,7 +13,7 @@ Keep this in mind as you use this feature in your projects.
 
 ## Compatibility
 ### ✅ Java
-All Java versions should be supported, as `jni` is only used for the structs and no method calls or such.<br>
+The export `JVM_DefineClassWithSource` was only added in JDK1.5, therefore all Java versions starting from `Java 6` are supported (there is no JNI version for `Java 5`).<br>
 Thus far only `Java 8`, `Java 20` and `Java 21` were explicitly tested.
 
 ### ✅ Operating system
