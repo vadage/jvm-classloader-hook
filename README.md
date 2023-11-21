@@ -44,11 +44,12 @@ private static final byte[] CUSTOM_MAGIC_VALUE = BigInteger.valueOf(0xDEADC0DE).
 ```
 
 ### Encrypt the bytes of your class
-For simplicity, every byte is encrypted using XOR with the static value 42.<br>
+For simplicity, every class is XOR encrypted using the same static key "my static key".<br>
 Changing the entire encryption part is highly recommended if you want to use a custom build. Modify `ClassLoader::decrypt_payload` to reverse your encryption method.
 ```java
+final byte[] keyBytes = "my static key".getBytes();
 for (int i = 0; i < classBytes.length; i++) {
-    classBytes[i] ^= 42;
+    classBytes[i] ^= keyBytes[i % keyBytes.length];
 }
 ```
 

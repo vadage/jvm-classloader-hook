@@ -5,6 +5,7 @@ use std::slice::from_raw_parts_mut;
 use retour::static_detour;
 use jni::sys::{jbyte, jclass, JNIEnv, jobject, jsize};
 use libloading::Library;
+use crate::environment;
 
 use crate::jvm::DefineClassCommon;
 
@@ -53,8 +54,9 @@ impl ClassLoader {
     }
 
     unsafe fn decrypt_custom_payload(bytes: &mut [jbyte]) {
+        let key_bytes = environment::ENCRYPTION_KEY.as_bytes();
         for i in 0..bytes.len() {
-            bytes[i] ^= 42;
+            bytes[i] ^= key_bytes[i % key_bytes.len()] as i8;
         }
 
         for i in 0..ClassLoader::JAVA_MAGIC_VALUE.len() {

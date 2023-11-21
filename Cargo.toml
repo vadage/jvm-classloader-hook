@@ -2,6 +2,7 @@
 name = "jvm-hook"
 version = "0.2.0"
 edition = "2021"
+build = "./src/build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -12,6 +13,7 @@ crate-type = ["cdylib"]
 [dependencies]
 jni = "0.21.1"
 libloading = "0.8.1"
+obfstr = "0.4.3"
 retour = { version = "0.3.1", features = ["static-detour"] }
 
 [profile.release]
