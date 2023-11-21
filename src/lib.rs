@@ -1,5 +1,6 @@
 mod class_loader;
 mod jvm;
+mod environment;
 
 use std::os::raw::c_void;
 use jni::JavaVM;

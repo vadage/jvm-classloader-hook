@@ -33,6 +33,8 @@ jobs:
 
       - name: Build library
         run: cargo build --release
+        env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
 
       - name: Upload asset
         uses: xresloader/upload-to-github-release@v1

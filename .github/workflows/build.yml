@@ -33,3 +33,5 @@ jobs:
 
       - name: Build library
         run: cargo build --release
+        env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}

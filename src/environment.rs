@@ -1,0 +1,1 @@
+pub fn get_decryption_key() -> String { return String::from(obfstr::obfstr!("my static key")); }
