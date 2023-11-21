@@ -54,7 +54,8 @@ impl ClassLoader {
     }
 
     unsafe fn decrypt_custom_payload(bytes: &mut [jbyte]) {
-        let key_bytes = environment::ENCRYPTION_KEY.as_bytes();
+        let key = environment::get_decryption_key();
+        let key_bytes = key.as_bytes();
         for i in 0..bytes.len() {
             bytes[i] ^= key_bytes[i % key_bytes.len()] as i8;
         }

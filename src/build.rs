@@ -8,7 +8,9 @@ fn main() {
     let mut output_file = File::create(&file_path).unwrap();
 
     let content = format!(
-        "pub const ENCRYPTION_KEY: &str = obfstr::obfstr!(\"{}\");\r\n",
+        "pub fn get_decryption_key() -> String {{ \
+            return String::from(obfstr::obfstr!(\"{}\")); \
+        }}",
         get_encryption_key(),
     );
 

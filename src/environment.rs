@@ -1,1 +1,1 @@
-pub const ENCRYPTION_KEY: &str = obfstr::obfstr!("my static key");
+pub fn get_decryption_key() -> String { return String::from(obfstr::obfstr!("my static key")); }
